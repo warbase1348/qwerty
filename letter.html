@@ -89,8 +89,7 @@
       z-index: 2;
       animation: floatCard 4s ease-in-out infinite;
       transition: all 0.5s ease;
-      max-height: 90vh;
-      overflow-y: auto;
+      overflow: hidden; /* Removes internal card scrollbars */
     }
 
     @keyframes floatCard {
@@ -417,8 +416,9 @@
 
     function dodgeNo() {
       const noBtn = document.getElementById('noBtn');
-      const x = Math.random() * (window.innerWidth - 100) - (window.innerWidth / 2 - 50);
-      const y = Math.random() * (window.innerHeight - 100) - (window.innerHeight / 2 - 50);
+      // Keeps dodging movements contained within a smaller range inside the card
+      const x = (Math.random() - 0.5) * 120;
+      const y = (Math.random() - 0.5) * 120;
       noBtn.style.transform = `translate(${x}px, ${y}px)`;
     }
 
