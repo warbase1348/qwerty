@@ -132,6 +132,7 @@
       align-items: center;
       gap: 15px;
       position: relative;
+      min-height: 80px;
     }
 
     button.btn-primary {
@@ -141,7 +142,7 @@
       border: none;
       border-radius: 50px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
       font-family: 'Poppins', sans-serif;
     }
@@ -150,10 +151,10 @@
     .btn-yes {
       background: linear-gradient(135deg, #8a2be2, #6a0dad);
       color: #ffffff;
+      z-index: 10;
     }
 
     .btn-yes:hover {
-      transform: scale(1.08);
       box-shadow: 0 6px 20px rgba(138, 43, 226, 0.35);
       background: linear-gradient(135deg, #9b42f5, #7b1fa2);
     }
@@ -164,7 +165,6 @@
       color: #8a2be2;
       border: 2px solid #e0c3fc;
       position: relative;
-      transition: transform 0.2s ease;
     }
 
     .btn-no:hover {
@@ -342,8 +342,8 @@
       <p class="subtext">i have to give your gift po</p>
 
       <div class="btn-group">
-        <button class="btn-primary btn-yes" onclick="goToStep(2)">Yes</button>
-        <button class="btn-primary btn-no" id="noBtn" onmouseover="dodgeNo()">No</button>
+        <button class="btn-primary btn-yes" id="yesBtn" onclick="goToStep(2)">Yes</button>
+        <button class="btn-primary btn-no" id="noBtn" onclick="growYes()" onmouseover="growYes()">No</button>
       </div>
     </div>
 
@@ -383,7 +383,6 @@
     <!-- STEP 5: Final Summary -->
     <div class="step-section" id="step5">
       <h1>Please screenshot and send it to me</h1>
-     
 
       <div class="summary-card">
         <div class="summary-item"><strong>Date & Time:</strong> <span id="sumTime"></span></div>
@@ -397,6 +396,7 @@
 
   <script>
     let selectedData = {};
+    let yesScale = 1;
 
     function goToStep(stepNumber) {
       document.getElementById('step1').style.display = 'none';
@@ -414,12 +414,10 @@
       }
     }
 
-    function dodgeNo() {
-      const noBtn = document.getElementById('noBtn');
-      // Keeps dodging movements contained within a smaller range inside the card
-      const x = (Math.random() - 0.5) * 120;
-      const y = (Math.random() - 0.5) * 120;
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    function growYes() {
+      const yesBtn = document.getElementById('yesBtn');
+      yesScale += 0.3; // Grows larger with each click/hover
+      yesBtn.style.transform = `scale(${yesScale})`;
     }
 
     function saveDate() {
