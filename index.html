@@ -89,7 +89,7 @@
       z-index: 2;
       animation: floatCard 4s ease-in-out infinite;
       transition: all 0.5s ease;
-      overflow: hidden; /* Removes internal card scrollbars */
+      overflow: hidden;
     }
 
     @keyframes floatCard {
@@ -145,6 +145,8 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
       font-family: 'Poppins', sans-serif;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* Yes Button */
@@ -152,6 +154,7 @@
       background: linear-gradient(135deg, #8a2be2, #6a0dad);
       color: #ffffff;
       z-index: 10;
+      transform-origin: center center;
     }
 
     .btn-yes:hover {
@@ -159,12 +162,13 @@
       background: linear-gradient(135deg, #9b42f5, #7b1fa2);
     }
 
-    /* No Button */
+    /* No Button - Explicitly set transform so it never dodges */
     .btn-no {
       background: #ffffff;
       color: #8a2be2;
       border: 2px solid #e0c3fc;
       position: relative;
+      transform: none !important;
     }
 
     .btn-no:hover {
@@ -343,7 +347,7 @@
 
       <div class="btn-group">
         <button class="btn-primary btn-yes" id="yesBtn" onclick="goToStep(2)">Yes</button>
-        <button class="btn-primary btn-no" id="noBtn" onclick="growYes()" onmouseover="growYes()">No</button>
+        <button class="btn-primary btn-no" id="noBtn">No</button>
       </div>
     </div>
 
@@ -398,6 +402,18 @@
     let selectedData = {};
     let yesScale = 1;
 
+    // Attach mobile and desktop touch/click handlers explicitly
+    const noBtn = document.getElementById('noBtn');
+
+    function handleNoInteraction(e) {
+      if (e) e.preventDefault(); // Prevents default touch zoom/scroll delays on mobile
+      growYes();
+    }
+
+    noBtn.addEventListener('click', handleNoInteraction);
+    noBtn.addEventListener('touchstart', handleNoInteraction, { passive: false });
+    noBtn.addEventListener('mouseover', growYes);
+
     function goToStep(stepNumber) {
       document.getElementById('step1').style.display = 'none';
       document.getElementById('step2').style.display = 'none';
@@ -416,7 +432,7 @@
 
     function growYes() {
       const yesBtn = document.getElementById('yesBtn');
-      yesScale += 0.3; // Grows larger with each click/hover
+      yesScale += 0.35; // Grows larger with each click/tap/hover
       yesBtn.style.transform = `scale(${yesScale})`;
     }
 
